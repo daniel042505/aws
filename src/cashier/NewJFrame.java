@@ -76,12 +76,12 @@ import paparon.LoginPage;
         fname.setForeground(new java.awt.Color(240, 240, 240));
         fname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         fname.setText("First Name");
-        getContentPane().add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 260, 40));
+        getContentPane().add(fname, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 70, 260, 40));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(240, 240, 240));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 110, 240, 40));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 120, 240, 40));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 255, 255));
@@ -98,12 +98,12 @@ import paparon.LoginPage;
         lasn3.setForeground(new java.awt.Color(240, 240, 240));
         lasn3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lasn3.setText("Last Name");
-        getContentPane().add(lasn3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 170, 250, 40));
+        getContentPane().add(lasn3, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 180, 250, 40));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(240, 240, 240));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 210, 240, 40));
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 220, 240, 40));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/nm.jpg"))); // NOI18N

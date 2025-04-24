@@ -5,15 +5,28 @@
  */
 package manager;
 
+import config.Session;
 import config.dbConnect;
 import config.passwordHasher;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import paparon.LoginPage;
 
@@ -31,8 +44,65 @@ public class createUserForm extends javax.swing.JFrame {
         
     }
     
-     Color navcolor = new Color(102,0,102);
-        Color hovercolor = new Color(153,0,255);
+        public String destination = "";
+    File selectedFile;
+    public String oldpath;
+    public String path; 
+    
+    public int FileExistenceChecker(String path){
+        File file = new File(path);
+        String fileName = file.getName();
+        
+        Path filePath = Paths.get("src/userimages", fileName);
+        boolean fileExists = Files.exists(filePath);
+        
+        if (fileExists) {
+            return 1;
+        } else {
+            return 0;
+        }
+    
+    }
+    
+          
+    public static int getHeightFromWidth(String imagePath, int desiredWidth) {
+        try {
+            // Read the image file
+            File imageFile = new File(imagePath);
+            BufferedImage image = ImageIO.read(imageFile);
+            
+            // Get the original width and height of the image
+            int originalWidth = image.getWidth();
+            int originalHeight = image.getHeight();
+            
+            // Calculate the new height based on the desired width and the aspect ratio
+            int newHeight = (int) ((double) desiredWidth / originalWidth * originalHeight);
+            
+            return newHeight;
+        } catch (IOException ex) {
+            System.out.println("No image found!");
+        }
+        
+        return -1;
+    }
+    
+    
+        public  ImageIcon ResizeImage(String ImagePath, byte[] pic, JLabel label) {
+    ImageIcon MyImage = null;
+        if(ImagePath !=null){
+            MyImage = new ImageIcon(ImagePath);
+        }else{
+            MyImage = new ImageIcon(pic);
+        }
+        
+        
+         int newHeight = getHeightFromWidth(ImagePath, label.getWidth());
+
+    Image img = MyImage.getImage();
+    Image newImg = img.getScaledInstance(label.getWidth(), newHeight, Image.SCALE_SMOOTH);
+    ImageIcon image = new ImageIcon(newImg);
+    return image;
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,6 +140,7 @@ public class createUserForm extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         image = new javax.swing.JLabel();
+        Clear2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -216,7 +287,7 @@ stt.addActionListener(new java.awt.event.ActionListener() {
     jPanel1.add(st, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 340, 90, -1));
 
     add.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    add.setText("Add");
+    add.setText("ADD");
     add.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             addActionPerformed(evt);
@@ -225,7 +296,7 @@ stt.addActionListener(new java.awt.event.ActionListener() {
     jPanel1.add(add, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, 90, 30));
 
     up.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    up.setText("Update");
+    up.setText("UPDATE");
     up.setEnabled(false);
     up.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -235,13 +306,13 @@ stt.addActionListener(new java.awt.event.ActionListener() {
     jPanel1.add(up, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 90, 30));
 
     Clear1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-    Clear1.setText("Clear");
+    Clear1.setText("CLEAR");
     Clear1.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             Clear1ActionPerformed(evt);
         }
     });
-    jPanel1.add(Clear1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 330, 90, 30));
+    jPanel1.add(Clear1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 330, 90, 30));
 
     u_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
     u_id.setEnabled(false);
@@ -273,6 +344,15 @@ stt.addActionListener(new java.awt.event.ActionListener() {
     jPanel2.add(image, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 180, 230));
 
     jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 50, 180, 230));
+
+    Clear2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+    Clear2.setText("SELECT");
+    Clear2.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            Clear2ActionPerformed(evt);
+        }
+    });
+    jPanel1.add(Clear2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 90, 30));
 
     jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/nm.jpg"))); // NOI18N
@@ -387,6 +467,7 @@ else if (pass.getPassword().length < 8) {
 
 else {
      dbConnect dbc = new dbConnect();
+     Session sess = Session.getInstance();
       try{
      String ps = passwordHasher.hashPassword(pass.getText());
      String status = (String )stt.getSelectedItem();
@@ -407,11 +488,20 @@ else {
 
               
                 String insertQuery = "INSERT INTO tbl_user(u_fname, u_lname, u_occ, u_cn, u_em, u_user, u_pass, u_status, u_image)"
-                        + "VALUES('"+fin.getText()+"', '"+lan.getText()+"', '"+occ.getSelectedItem()+"', '"+can.getText()+"', '"+em.getText()+"', '"+use.getText()+"', '"+ps+"', "+status+")";
+                        + "VALUES('"+fin.getText()+"', '"+lan.getText()+"', '"+occ.getSelectedItem()+"', '"+can.getText()+"', '"+em.getText()+"', '"+use.getText()+"', '"+ps+"', '"+status+"','"+destination+"')";
                 
                 if (dbc.insertData(insertQuery) == 0) {
                     JOptionPane.showMessageDialog(null, "Registered Successfully");
                 }
+                
+                 if (selectedFile != null) {
+                   
+                    try {
+                        Files.copy(selectedFile.toPath(), new File(destination).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        System.out.println("Insert image error: " + ex.getMessage());
+                    }
+                 }
                 new ManageUsers().setVisible(true);
                 this.setVisible(false);
                 this.dispose();
@@ -549,6 +639,9 @@ else {
         can.setText("");
         em.setText("");
         pass.setText("");
+        image.setIcon(null);
+        destination = "";
+        path = "";
     }//GEN-LAST:event_Clear1ActionPerformed
 
     private void u_idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_u_idActionPerformed
@@ -583,6 +676,31 @@ else {
         this.setVisible(false);
         this.dispose();
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void Clear2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Clear2ActionPerformed
+        // TODO add your handling code here:
+        
+         JFileChooser fileChooser = new JFileChooser();
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            try {
+                selectedFile = fileChooser.getSelectedFile();
+                destination = "src/userimages/" + selectedFile.getName();
+                path  = selectedFile.getAbsolutePath();
+
+                if(FileExistenceChecker(path) == 1){
+                    JOptionPane.showMessageDialog(null, "File Already Exist, Rename or Choose another!");
+                    destination = "";
+                    path="";
+                }else{
+                    image.setIcon(ResizeImage(path, null, image));
+
+                }
+            } catch (Exception ex) {
+                System.out.println("File Error!");
+            }
+        }
+    }//GEN-LAST:event_Clear2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -621,6 +739,7 @@ else {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Clear1;
+    private javax.swing.JButton Clear2;
     public javax.swing.JButton add;
     public javax.swing.JTextField can;
     private javax.swing.JLabel cn;

@@ -82,6 +82,8 @@ public class Updatecashier extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("UPDATE ACCOUNT");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 640, 60));
+
+        cn.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         getContentPane().add(cn, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 270, 280, 40));
 
         firn4.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
